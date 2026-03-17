@@ -68,6 +68,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     books.appendChild(newBook(book));
                 });
 
+                document.querySelectorAll('.button-finding').forEach((btn) => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.target.getAttribute('data-id');
+                        const id_produto = document.querySelector(`.book[data-id="${id}"] input`).value;
+                        print(id_produto);
+                    });
+                });
+
                 document.querySelectorAll('.button-shipping').forEach((btn) => {
                     btn.addEventListener('click', (e) => {
                         const id = e.target.getAttribute('data-id');
