@@ -124,7 +124,7 @@ searchBtn.addEventListener('click', () => {
         })
         .catch((err) => {
             swal('Erro', 'Erro ao buscar o produto', 'error').then(() => {
-                location.reload(); // Só recarrega depois que o usuário fecha o alerta
+                location.reload();
             });
             console.error(err);
         });
