@@ -65,15 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
         .then((data) => {
             if (data) {
                 data.forEach((book) => {
+                    console.log(book);
                     books.appendChild(newBook(book));
-                });
-
-                document.querySelectorAll('.button-finding').forEach((btn) => {
-                    btn.addEventListener('click', (e) => {
-                        const id = e.target.getAttribute('data-id');
-                        const id_produto = document.querySelector(`.book[data-id="${id}"] input`).value;
-                        print(id_produto);
-                    });
                 });
 
                 document.querySelectorAll('.button-shipping').forEach((btn) => {
@@ -93,6 +86,46 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch((err) => {
             swal('Erro', 'Erro ao listar os produtos', 'error');
+            console.error(err);
+        });
+});
+
+const searchBtn = document.querySelector('.button-search');
+
+searchBtn.addEventListener('click', () => {
+    const books = document.querySelector('.books');
+    const idProd = document.querySelector('.center input').value;
+    fetch('http://localhost:3000/product/' + idProd)
+        .then((data) => {
+            if (data.ok) {
+                return data.json();
+            }
+            throw data.statusText;
+        })
+        .then((data) => {
+            if (data) {
+                books.innerHTML = '';
+                books.appendChild(newBook(data));
+
+                document.querySelectorAll('.button-shipping').forEach((btn) => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.target.getAttribute('data-id');
+                        const cep = document.querySelector(`.book[data-id="${id}"] input`).value;
+                        calculateShipping(id, cep);
+                    });
+                });
+
+                document.querySelectorAll('.button-buy').forEach((btn) => {
+                    btn.addEventListener('click', (e) => {
+                        swal('Compra de livro', 'Sua compra foi realizada com sucesso', 'success');
+                    });
+                });
+            }
+        })
+        .catch((err) => {
+            swal('Erro', 'Erro ao buscar o produto', 'error').then(() => {
+                location.reload(); // Só recarrega depois que o usuário fecha o alerta
+            });
             console.error(err);
         });
 });
